@@ -2,34 +2,69 @@
 
 import { useEffect, useRef, useState } from "react";
 
-interface Body {
+interface Icon {
   x: number;
   y: number;
-  vx: number;
-  vy: number;
   r: number;
   rotation: number;
-  angularV: number;
-  settled: boolean;
-  bounceCount: number;
 }
 
-const GRAVITY = 600;
-const RESTITUTION = 0.45;
-const FRICTION = 0.998;
 const ICON_COUNT = 90;
 const ICON_SIZE_MIN = 32;
 const ICON_SIZE_MAX = 50;
-const DROP_INTERVAL = 60;
+
+// Seeded random for consistent placement across renders
+function mulberry32(seed: number) {
+  return () => {
+    seed |= 0;
+    seed = (seed + 0x6d2b79f5) | 0;
+    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+function placeIcons(w: number, h: number): Icon[] {
+  const rand = mulberry32(42);
+  const icons: Icon[] = [];
+  const floorY = h;
+
+  // Place icons in rows from the bottom up, like a pile on the ground
+  const cols = Math.floor(w / (ICON_SIZE_MIN + 4));
+  let row = 0;
+  let col = 0;
+
+  for (let i = 0; i < ICON_COUNT; i++) {
+    const size = ICON_SIZE_MIN + rand() * (ICON_SIZE_MAX - ICON_SIZE_MIN);
+    const r = size / 2;
+
+    // Stagger each row with slight offset
+    const rowOffset = row % 2 === 1 ? (ICON_SIZE_MIN + 4) / 2 : 0;
+    const x = rowOffset + col * (ICON_SIZE_MIN + 4) + r + (rand() - 0.5) * 6;
+    const y = floorY - r - row * (ICON_SIZE_MIN * 0.85) + (rand() - 0.5) * 4;
+
+    icons.push({
+      x: Math.max(r, Math.min(w - r, x)),
+      y,
+      r,
+      rotation: (rand() - 0.5) * 0.25,
+    });
+
+    col++;
+    if (col >= cols) {
+      col = 0;
+      row++;
+    }
+  }
+
+  return icons;
+}
 
 export default function IconRain() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const bodiesRef = useRef<Body[]>([]);
+  const iconsRef = useRef<Icon[]>([]);
   const logoRef = useRef<HTMLImageElement | null>(null);
-  const droppedRef = useRef(0);
-  const frozenRef = useRef(false);
   const frameRef = useRef(0);
-  const floodStartedRef = useRef(false);
   const scrollOpacityRef = useRef(1);
   const [ready, setReady] = useState(false);
 
@@ -51,11 +86,14 @@ export default function IconRain() {
     if (!ctx) return;
 
     const resize = () => {
-      canvas.width = window.innerWidth * window.devicePixelRatio;
-      canvas.height = window.innerHeight * window.devicePixelRatio;
+      const dpr = window.devicePixelRatio;
+      canvas.width = window.innerWidth * dpr;
+      canvas.height = window.innerHeight * dpr;
       canvas.style.width = window.innerWidth + "px";
       canvas.style.height = window.innerHeight + "px";
-      ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      // Recalculate icon positions on resize
+      iconsRef.current = placeIcons(window.innerWidth, window.innerHeight);
     };
     resize();
     window.addEventListener("resize", resize);
@@ -67,183 +105,22 @@ export default function IconRain() {
     };
     window.addEventListener("scroll", onScroll, { passive: true });
 
-    const W = () => window.innerWidth;
-    const H = () => window.innerHeight;
-
-    const spawnIcon = () => {
-      const size = ICON_SIZE_MIN + Math.random() * (ICON_SIZE_MAX - ICON_SIZE_MIN);
-      bodiesRef.current.push({
-        x: 40 + Math.random() * (W() - 80),
-        y: -size - Math.random() * 100,
-        vx: (Math.random() - 0.5) * 60,
-        vy: 50 + Math.random() * 80,
-        r: size / 2,
-        rotation: (Math.random() - 0.5) * 0.6,
-        angularV: (Math.random() - 0.5) * 2,
-        settled: false,
-        bounceCount: 0,
-      });
-      droppedRef.current++;
-    };
-
-    // Drop the scout icon first — center of screen, slightly bigger
-    const scoutSize = 48;
-    bodiesRef.current.push({
-      x: W() / 2,
-      y: -scoutSize,
-      vx: 0,
-      vy: 30,
-      r: scoutSize / 2,
-      rotation: 0,
-      angularV: 0.5,
-      settled: false,
-      bounceCount: 0,
-    });
-    droppedRef.current = 1;
-
-    // Flood timer — starts after scout bounces 3 times
-    let floodTimer: ReturnType<typeof setInterval> | null = null;
-
-    const startFlood = () => {
-      if (floodStartedRef.current) return;
-      floodStartedRef.current = true;
-      floodTimer = setInterval(() => {
-        if (droppedRef.current >= ICON_COUNT) {
-          if (floodTimer) clearInterval(floodTimer);
-          return;
-        }
-        spawnIcon();
-      }, DROP_INTERVAL);
-    };
-
-    // Freeze after 15 seconds
-    const freezeTimer = setTimeout(() => {
-      frozenRef.current = true;
-    }, 15000);
-
-    let lastTime = performance.now();
-
-    const step = (now: number) => {
-      const dt = Math.min((now - lastTime) / 1000, 0.033);
-      lastTime = now;
-
-      const w = W();
-      const h = H();
-      const bodies = bodiesRef.current;
-
-      ctx.clearRect(0, 0, w, h);
-
-      if (!frozenRef.current) {
-        for (const b of bodies) {
-          if (b.settled) continue;
-
-          b.vy += GRAVITY * dt;
-          b.vx *= FRICTION;
-          b.vy *= FRICTION;
-          b.x += b.vx * dt;
-          b.y += b.vy * dt;
-          b.rotation += b.angularV * dt;
-          b.angularV *= 0.99;
-
-          // Floor
-          if (b.y + b.r > h) {
-            b.y = h - b.r;
-            b.vy = -b.vy * RESTITUTION;
-            b.vx *= 0.8;
-            b.angularV *= 0.7;
-            b.bounceCount++;
-
-            // Scout: after 3 bounces, start the flood
-            if (b === bodies[0] && b.bounceCount >= 3 && !floodStartedRef.current) {
-              startFlood();
-            }
-
-            if (Math.abs(b.vy) < 8) {
-              b.vy = 0;
-            }
-          }
-
-          // Walls
-          if (b.x - b.r < 0) {
-            b.x = b.r;
-            b.vx = Math.abs(b.vx) * RESTITUTION;
-          }
-          if (b.x + b.r > w) {
-            b.x = w - b.r;
-            b.vx = -Math.abs(b.vx) * RESTITUTION;
-          }
-
-          // Settle check
-          if (Math.abs(b.vx) < 1.5 && Math.abs(b.vy) < 1.5 && b.y + b.r >= h - 2) {
-            b.settled = true;
-            b.vx = 0;
-            b.vy = 0;
-            b.angularV = 0;
-          }
-        }
-
-        // Icon-to-icon collisions
-        for (let i = 0; i < bodies.length; i++) {
-          for (let j = i + 1; j < bodies.length; j++) {
-            const a = bodies[i];
-            const bx = bodies[j];
-            const dx = bx.x - a.x;
-            const dy = bx.y - a.y;
-            const dist = Math.sqrt(dx * dx + dy * dy);
-            const minDist = a.r + bx.r;
-
-            if (dist < minDist && dist > 0.1) {
-              const nx = dx / dist;
-              const ny = dy / dist;
-              const overlap = minDist - dist;
-
-              if (!a.settled && !bx.settled) {
-                a.x -= nx * overlap * 0.5;
-                a.y -= ny * overlap * 0.5;
-                bx.x += nx * overlap * 0.5;
-                bx.y += ny * overlap * 0.5;
-              } else if (a.settled) {
-                bx.x += nx * overlap;
-                bx.y += ny * overlap;
-              } else {
-                a.x -= nx * overlap;
-                a.y -= ny * overlap;
-              }
-
-              const dvx = a.vx - bx.vx;
-              const dvy = a.vy - bx.vy;
-              const dot = dvx * nx + dvy * ny;
-
-              if (dot > 0) {
-                const impulse = dot * RESTITUTION;
-                if (!a.settled) {
-                  a.vx -= impulse * nx;
-                  a.vy -= impulse * ny;
-                }
-                if (!bx.settled) {
-                  bx.vx += impulse * nx;
-                  bx.vy += impulse * ny;
-                }
-              }
-
-              if (a.settled && Math.abs(dot) > 40) a.settled = false;
-              if (bx.settled && Math.abs(dot) > 40) bx.settled = false;
-            }
-          }
-        }
-      }
-
-      // Draw
+    const draw = () => {
+      const w = window.innerWidth;
+      const h = window.innerHeight;
       const logo = logoRef.current;
       const opacity = scrollOpacityRef.current;
-      ctx.globalAlpha = opacity;
-      if (logo && opacity > 0.01) {
-        for (const b of bodies) {
-          ctx.save();
-          ctx.translate(b.x, b.y);
-          ctx.rotate(b.rotation);
 
-          const size = b.r * 2;
+      ctx.clearRect(0, 0, w, h);
+      ctx.globalAlpha = opacity;
+
+      if (logo && opacity > 0.01) {
+        for (const icon of iconsRef.current) {
+          ctx.save();
+          ctx.translate(icon.x, icon.y);
+          ctx.rotate(icon.rotation);
+
+          const size = icon.r * 2;
           const radius = size * 0.22;
 
           ctx.beginPath();
@@ -264,15 +141,13 @@ export default function IconRain() {
         }
       }
 
-      frameRef.current = requestAnimationFrame(step);
+      frameRef.current = requestAnimationFrame(draw);
     };
 
-    frameRef.current = requestAnimationFrame(step);
+    frameRef.current = requestAnimationFrame(draw);
 
     return () => {
       cancelAnimationFrame(frameRef.current);
-      if (floodTimer) clearInterval(floodTimer);
-      clearTimeout(freezeTimer);
       window.removeEventListener("resize", resize);
       window.removeEventListener("scroll", onScroll);
     };
