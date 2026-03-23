@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import FadeIn from "./FadeIn";
 
 declare global {
@@ -21,49 +21,48 @@ const tweetIds = [
 ];
 
 function TweetEmbed({ tweetId }: { tweetId: string }) {
-  const ref = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const rendered = useRef(false);
   const [loaded, setLoaded] = useState(false);
 
-  useEffect(() => {
-    const render = () => {
-      if (window.twttr && ref.current && !loaded) {
-        // Create a fresh container so React DOM isn't disrupted
-        const container = document.createElement("div");
-        ref.current.appendChild(container);
-        window.twttr.widgets
-          .createTweet(tweetId, container, {
-            theme: "light",
-            conversation: "none",
-            width: "340",
-          })
-          .then(() => setLoaded(true))
-          .catch(() => {});
-      }
-    };
+  const tryRender = useCallback(() => {
+    if (rendered.current || !containerRef.current || !window.twttr) return;
+    rendered.current = true;
+    window.twttr.widgets
+      .createTweet(tweetId, containerRef.current, {
+        theme: "light",
+        conversation: "none",
+        width: "340",
+      })
+      .then(() => setLoaded(true))
+      .catch(() => { rendered.current = false; });
+  }, [tweetId]);
 
-    if (window.twttr) {
-      render();
-    } else {
-      const check = setInterval(() => {
-        if (window.twttr) {
-          clearInterval(check);
-          render();
-        }
-      }, 300);
-      return () => {
-        clearInterval(check);
-        // Clean up on unmount (strict mode re-mount)
-        if (ref.current) {
-          while (ref.current.firstChild) {
-            ref.current.removeChild(ref.current.firstChild);
-          }
-        }
-      };
-    }
-  }, [tweetId, loaded]);
+  useEffect(() => {
+    // Try immediately
+    tryRender();
+
+    // Also poll in case script hasn't loaded yet
+    const interval = setInterval(() => {
+      if (window.twttr) {
+        tryRender();
+        clearInterval(interval);
+      }
+    }, 500);
+
+    // Listen for twitter script ready event
+    const onReady = () => tryRender();
+    document.addEventListener("twttr:ready", onReady);
+
+    return () => {
+      clearInterval(interval);
+      document.removeEventListener("twttr:ready", onReady);
+    };
+  }, [tryRender]);
 
   return (
-    <div ref={ref} className="min-h-[200px] flex items-center justify-center">
+    <div className="min-h-[200px] flex items-center justify-center">
+      <div ref={containerRef} />
       {!loaded && (
         <p className="text-sm text-[var(--color-ink-tertiary)]">Loading tweet...</p>
       )}
@@ -73,13 +72,18 @@ function TweetEmbed({ tweetId }: { tweetId: string }) {
 
 export default function SocialProof() {
   useEffect(() => {
-    if (!document.getElementById("twitter-wjs")) {
-      const script = document.createElement("script");
-      script.id = "twitter-wjs";
-      script.src = "https://platform.twitter.com/widgets.js";
-      script.async = true;
-      document.body.appendChild(script);
-    }
+    if (typeof window === "undefined") return;
+    if (document.getElementById("twitter-wjs")) return;
+
+    const script = document.createElement("script");
+    script.id = "twitter-wjs";
+    script.src = "https://platform.twitter.com/widgets.js";
+    script.async = true;
+    script.onload = () => {
+      // Dispatch custom event when script loads
+      document.dispatchEvent(new Event("twttr:ready"));
+    };
+    document.head.appendChild(script);
   }, []);
 
   return (
