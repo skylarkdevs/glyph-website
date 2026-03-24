@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Nunito } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 
 const nunito = Nunito({
@@ -28,6 +29,13 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={nunito.variable}>
+      <head>
+        <Script
+          src="https://aromatic-caribou-889.convex.site/api/a/am_UZEyCHl5ckFhHM-x"
+          strategy="afterInteractive"
+          async
+        />
+      </head>
       <body className="font-[family-name:var(--font-nunito)]">{children}</body>
     </html>
   );
