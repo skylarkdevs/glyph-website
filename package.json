@@ -13,9 +13,11 @@
   "type": "module",
   "description": "",
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
     "@tailwindcss/postcss": "^4.2.2",
     "@types/node": "^25.5.0",
     "@types/react": "^19.2.14",
+    "@upstash/redis": "^1.37.0",
     "framer-motion": "^12.38.0",
     "next": "^16.2.1",
     "postcss": "^8.5.8",
