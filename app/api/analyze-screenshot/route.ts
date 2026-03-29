@@ -131,7 +131,7 @@ export async function POST(req: NextRequest) {
       userPrompt += `\nDetected UI elements on this screen:\n${elementSummary}\nUse this to identify specific elements in your suggestions.\n`;
     }
 
-    userPrompt += "\nReturn 3-5 suggestions as a JSON array.";
+    userPrompt += "\nReturn 1-2 suggestions as a JSON array. Only use types: heroResize or enhanceGlow.";
 
     const result = await model.generateContent([
       { inlineData: { mimeType, data: base64Data } },
