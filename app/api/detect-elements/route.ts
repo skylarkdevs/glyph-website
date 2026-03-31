@@ -21,7 +21,7 @@ const VALID_TYPES = new Set([
   "card", "background",
 ]);
 
-export const maxDuration = 60;
+export const maxDuration = 120;
 
 // --- Shared auth helpers ---
 
@@ -318,7 +318,7 @@ export async function POST(req: NextRequest) {
 
     // --- Gemini detection call ---
     const model = genAI.getGenerativeModel({
-      model: "gemini-2.0-flash",
+      model: "gemini-2.5-flash",
       generationConfig: {
         temperature: 0.2,
         maxOutputTokens: 8192,
@@ -344,7 +344,7 @@ export async function POST(req: NextRequest) {
       // Retry: send the broken output back to Gemini for repair
       try {
         const fixModel = genAI.getGenerativeModel({
-          model: "gemini-2.0-flash",
+          model: "gemini-2.5-flash",
           generationConfig: { temperature: 0, maxOutputTokens: 8192 },
         });
         const fixResult = await fixModel.generateContent([

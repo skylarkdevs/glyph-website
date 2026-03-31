@@ -13,7 +13,7 @@ const redis = new Redis({
 const MONTHLY_LIMIT = parseInt(process.env.MONTHLY_CREDIT_LIMIT || "1000", 10);
 const REQUEST_SECRET = process.env.GLYPH_REQUEST_SECRET || "";
 
-export const maxDuration = 30;
+export const maxDuration = 120;
 
 function usageKey(deviceId: string): string {
   const now = new Date();
@@ -39,41 +39,75 @@ function json(data: object, status: number) {
 
 // --- System prompt ---
 
-const SYSTEM_PROMPT = `You are an App Store screenshot analyst. Identify the 1-2 most impactful VISUAL improvements for this app screenshot.
+const SYSTEM_PROMPT = `You select ONE visual element from an app screenshot to extract and display enlarged. Return EXACTLY 2 JSON suggestions.
 
-CONTEXT: This screenshot appears inside a phone mockup on an App Store marketing slide. Users see it small — only bold visual changes matter.
+WHAT THIS DOES: The element you select gets cropped out of the screenshot and rendered BIGGER, floating above the phone frame on a marketing slide. It must look clean and impressive when shown standalone at 1.5x size.
 
-YOU CAN ONLY SUGGEST THESE TWO TYPES:
+STEP 1 — FIND THE BEST VISUAL ELEMENT:
+Scan the screenshot and pick the single most eye-catching VISUAL element. Follow this priority:
 
-1. "heroResize" (priority: 5) — Identify the MOST IMPORTANT visual element on screen that should be made bigger and more prominent.
-   - The main feature card, hero image, key metric, or primary content block
-   - The element that best sells the app's value at thumbnail size
-   - Only suggest ONE heroResize per screenshot — the single most impactful element
-   - The instruction should name what the element is
-   → Example: {"type":"heroResize","instruction":"The nutrition goals card with calories and macros is the key feature","displayLabel":"Highlight nutrition card","priority":5,"x":0.08,"y":0.45,"width":0.84,"height":0.15}
+1. CIRCULAR/ROUND visuals (progress rings, score circles, avatars, round icons with rings)
+   → Crop as a SQUARE box — equal width and height, tightly around the circle
+   → Example: a "72%" progress ring → square crop centered on the ring
 
-2. "enhanceGlow" (priority: 4) — Add a subtle glow/highlight behind a key visual element to make it pop.
-   - App icons, feature cards, hero images, or important buttons
-   - The glow makes the element feel premium and draws the eye
-   - Only suggest this for elements that would benefit from visual emphasis
-   → Example: {"type":"enhanceGlow","instruction":"Add a warm glow behind the app icon to make it the focal point","displayLabel":"Glow on app icon","priority":4,"x":0.3,"y":0.1,"width":0.4,"height":0.12}
+2. DATA CARDS with icons + numbers (weight cards, stat blocks, metric displays)
+   → Include the full card: icon + number + label, but NOT section headers above it
+   → Example: a card showing "64.9 kg" with a flame icon and macro breakdown
 
-BANNED — NEVER suggest these:
-- ANY text changes (replace, rename, translate, populate text)
-- Filling empty screens with fake data
-- Removing or rearranging UI elements
-- Color changes, filter effects, or blur
-- More than 2 suggestions total
+3. GRID GROUPS (2-4 cards in a grid, like location pickers or category selectors)
+   → Select ALL cards in the grid as ONE bounding box
+   → Example: 4 location cards → one box wrapping all four
+
+4. IMAGE CONTENT (photos, thumbnails, hero images, illustrations)
+   → Tight crop around the image boundary
+
+5. LAST RESORT — large interactive elements (big CTAs, prominent toggles)
+
+NEVER SELECT:
+- Text sentences or phrases ("ontdek hoe kakker je bent" = NO)
+- Section headers ("Settings", "Goals & Targets", "Vibe Check" = NO)
+- Status bar, nav bar, tab bar
+- Regions wider than 85% of screen — too loose, find something specific
+- Empty space or background areas
+
+TEXT vs DATA: "72%" next to a progress ring = YES (data). "64.9 kg" in a metric card = YES. But "Start logging your meals" = NO (sentence). Numbers/metrics with visuals = good. Sentences/phrases = bad.
+
+STEP 2 — DRAW THE BOUNDING BOX:
+- x, y = top-left corner. width, height = element dimensions
+- Include 5-10% PADDING around the element — our system auto-trims to the precise boundary
+- It's BETTER to include slightly too much than to cut off content
+- For circular elements: make width ≈ height (square crop) with padding around the circle
+- For card groups: wrap the cards generously, exclude obvious headers/titles above
+- Don't stress about pixel-perfect accuracy — our auto-trim handles that
+
+STEP 3 — RETURN 2 SUGGESTIONS:
+Both target the SAME element with IDENTICAL bounding box.
+
+Suggestion 1: "heroResize" — extract and enlarge the element
+Suggestion 2: "enhanceGlow" — glow-only option for the same element
+
+Include glowColor (hex matching the element's dominant color) and glowIntensity (0.0-1.0).
+- Sparse screens: 0.7-1.0 (strong glow to fill empty space)
+- Busy screens: 0.2-0.5 (subtle, don't overwhelm)
+
+GOOD EXAMPLES:
+→ Progress ring: {"type":"heroResize","instruction":"72% crown progress indicator","displayLabel":"Resize score ring","priority":5,"x":0.28,"y":0.22,"width":0.22,"height":0.22,"glowColor":"#D4AF37","glowIntensity":0.8}
+→ Data card: {"type":"heroResize","instruction":"Weight and nutrition data card with metrics","displayLabel":"Resize nutrition card","priority":5,"x":0.05,"y":0.42,"width":0.55,"height":0.15,"glowColor":"#8B5CF6","glowIntensity":0.6}
+→ Card grid: {"type":"heroResize","instruction":"4 location selector cards in grid","displayLabel":"Resize location grid","priority":5,"x":0.08,"y":0.52,"width":0.84,"height":0.28,"glowColor":"#2D3748","glowIntensity":0.5}
+
+BAD EXAMPLES (never do this):
+→ {"x":0.03,"y":0.10,"width":0.94,"height":0.50} ← way too large, grabs everything
+→ {"x":0.2,"y":0.45,"width":0.6,"height":0.04} ← text line, not a visual element
+→ {"x":0.0,"y":0.0,"width":1.0,"height":0.05} ← status bar
 
 RULES:
-- Return 1-2 suggestions MAX. Quality over quantity.
-- Bounding box (x, y, width, height): normalized 0-1 coordinates of the target element
-- The bounding box must tightly wrap the specific element, not a large region
+- Return EXACTLY 2 suggestions: one heroResize, one enhanceGlow
+- IDENTICAL bounding box on both
 - displayLabel: max 35 chars
-- If the screenshot already looks polished, return an empty array []
+- Visuals over text, always
 
 Return ONLY a valid JSON array:
-[{"type":"heroResize","instruction":"...","displayLabel":"...","priority":5,"x":0,"y":0,"width":0,"height":0}]`;
+[{"type":"heroResize","instruction":"...","displayLabel":"...","priority":5,"x":0,"y":0,"width":0,"height":0,"glowColor":"#hex","glowIntensity":0.6},{"type":"enhanceGlow","instruction":"...","displayLabel":"...","priority":4,"x":0,"y":0,"width":0,"height":0,"glowColor":"#hex","glowIntensity":0.7}]`;
 
 // --- Handler ---
 
@@ -114,7 +148,7 @@ export async function POST(req: NextRequest) {
     if (mimeMatch) mimeType = mimeMatch[1];
 
     const model = genAI.getGenerativeModel({
-      model: "gemini-2.0-flash",
+      model: "gemini-2.5-flash",
       systemInstruction: SYSTEM_PROMPT,
     });
 
@@ -131,7 +165,7 @@ export async function POST(req: NextRequest) {
       userPrompt += `\nDetected UI elements on this screen:\n${elementSummary}\nUse this to identify specific elements in your suggestions.\n`;
     }
 
-    userPrompt += "\nReturn 1-2 suggestions as a JSON array. Only use types: heroResize or enhanceGlow.";
+    userPrompt += "\nReturn EXACTLY 2 suggestions as a JSON array: one heroResize and one enhanceGlow, both targeting the same key element.";
 
     const result = await model.generateContent([
       { inlineData: { mimeType, data: base64Data } },
@@ -153,8 +187,20 @@ export async function POST(req: NextRequest) {
       return json({ error: "Failed to parse AI response", raw: cleaned, remainingCredits: remaining }, 422);
     }
 
-    // Cap at 5 suggestions
-    suggestions = suggestions.slice(0, 5);
+    // Cap at 2 suggestions (one heroResize + one enhanceGlow)
+    suggestions = suggestions.slice(0, 2);
+
+    // Validate bounding boxes — reject elements that are too small to be meaningful
+    suggestions = suggestions.filter(s => {
+      const w = s.width ?? 0;
+      const h = s.height ?? 0;
+      const area = w * h;
+      if (w < 0.10 || h < 0.04 || area < 0.008) {
+        console.log(`[analyze] Rejected suggestion '${s.displayLabel}': too small (w:${w}, h:${h}, area:${area.toFixed(4)})`);
+        return false;
+      }
+      return true;
+    });
 
     // Increment usage
     const newUsed = await redis.incr(key);
