@@ -104,7 +104,7 @@ export async function POST(req: NextRequest) {
 
     if (!appName) return json({ error: "Missing appName" }, 400);
 
-    const numSlides = Math.min(slideCount || 6, 8);
+    const numSlides = Math.min(slideCount || 6, 12);  // Support up to 12 slides
     const lang = language || "en";
 
     // ── Build rich context for the AI ──
