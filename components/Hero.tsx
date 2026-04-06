@@ -34,17 +34,16 @@ export default function Hero() {
             <span className="text-lg font-extrabold tracking-tight">Drip.</span>
           </div>
 
-          <h1 className="text-2xl md:text-3xl font-extrabold text-[var(--color-ink)] mb-4 max-w-lg leading-snug">
-            <span>From code to App Store listing.</span><br />
-            <span>The last mile, </span>
+          <h1 className="text-3xl md:text-4xl font-black text-[var(--color-ink)] mb-4 max-w-md leading-tight tracking-tight">
+            <span>The last mile,</span><br />
             <span className="relative inline-block">
               <span className="relative z-10 rainbow-text">solved.</span>
-              <span className="absolute bottom-0.5 left-0 right-0 h-2 md:h-3 bg-gradient-to-r from-[#44A8F7]/20 via-[#A78BFA]/20 to-[#F472B6]/20 rounded-full -z-0 blur-[2px]" />
+              <span className="absolute bottom-0.5 left-0 right-0 h-2.5 md:h-3 bg-gradient-to-r from-[#44A8F7]/20 via-[#A78BFA]/20 to-[#F472B6]/20 rounded-full -z-0 blur-[2px]" />
             </span>
           </h1>
 
-          <p className="text-base md:text-lg text-[var(--color-ink-secondary)] mb-8 max-w-md leading-relaxed">
-            Drip builds everything around your app — icons, screenshots with AI backgrounds, conversion-optimized headlines in every major language. <span className="font-semibold text-[var(--color-ink)]">You just upload and ship.</span>
+          <p className="text-base text-[var(--color-ink-secondary)] mb-8 max-w-sm leading-relaxed">
+            AI icons, screenshots, and localized headlines — from your app to the App Store in minutes.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center lg:items-start gap-4">

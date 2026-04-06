@@ -11,7 +11,7 @@ const nunito = Nunito({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://getglyph.dev"),
+  metadataBase: new URL("https://getdrip.dev"),
   title: "Drip — AI App Icon Generator & App Store Screenshot Builder",
   description:
     "Generate professional app icons and App Store screenshots with AI in seconds. No design skills needed. Describe your app, pick a style, and ship to the App Store. Free to start.",
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     images: [{ url: "/og-image.png", width: 1200, height: 630 }],
     type: "website",
     siteName: "Drip",
-    url: "https://getglyph.dev",
+    url: "https://getdrip.dev",
   },
   twitter: {
     card: "summary_large_image",
@@ -62,7 +62,7 @@ const jsonLd = {
       name: "Drip",
       applicationCategory: "DesignApplication",
       operatingSystem: "iOS",
-      url: "https://getglyph.dev",
+      url: "https://getdrip.dev",
       description:
         "AI-powered app icon generator and App Store screenshot builder for iOS developers.",
       offers: [
