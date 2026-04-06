@@ -16,7 +16,7 @@ const MONTHLY_LIMIT = parseInt(process.env.MONTHLY_CREDIT_LIMIT || "1000", 10);
 const REQUEST_SECRET = process.env.GLYPH_REQUEST_SECRET || "";
 const ALLOWED_MIME_TYPES = ["image/jpeg", "image/png", "image/webp"];
 
-export const maxDuration = 60;
+export const maxDuration = 120;
 
 // --- Helpers ---
 
