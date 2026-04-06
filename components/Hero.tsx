@@ -30,8 +30,8 @@ export default function Hero() {
           {/* Logo pill */}
           <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-white/60 backdrop-blur-sm border border-black/[0.06] shadow-sm mb-6">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo.png" alt="Glyph" width={32} height={32} className="rounded-[8px]" />
-            <span className="text-lg font-extrabold tracking-tight">Glyph.</span>
+            <img src="/logo.png" alt="Drip" width={32} height={32} className="rounded-[8px]" />
+            <span className="text-lg font-extrabold tracking-tight">Drip.</span>
           </div>
 
           <h1 className="text-2xl md:text-3xl font-extrabold text-[var(--color-ink)] mb-4 max-w-lg leading-snug">
@@ -44,7 +44,7 @@ export default function Hero() {
           </h1>
 
           <p className="text-base md:text-lg text-[var(--color-ink-secondary)] mb-8 max-w-md leading-relaxed">
-            AI icons and App Store screenshots in seconds. The bottleneck was never the code — it was everything around it. <span className="font-semibold text-[var(--color-ink)]">Glyph fixes that.</span>
+            AI icons and App Store screenshots in seconds. The bottleneck was never the code — it was everything around it. <span className="font-semibold text-[var(--color-ink)]">Drip fixes that.</span>
           </p>
 
           <div className="flex flex-col sm:flex-row items-center lg:items-start gap-4">
@@ -65,6 +65,7 @@ export default function Hero() {
                 loop
                 muted
                 playsInline
+                aria-label="Drip app demo — generating app icons with AI"
                 className="w-full h-full object-cover"
               >
                 <source src="/hero-video.mp4" type="video/mp4" />

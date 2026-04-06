@@ -29,7 +29,7 @@ export default function Features() {
             The bottleneck isn&apos;t building anymore.
           </h2>
           <p className="text-center text-[var(--color-ink-secondary)] text-lg mb-16 max-w-2xl mx-auto">
-            Vibe coding made apps easy. But icons and screenshots? Still a time sink. Glyph fixes that.
+            Vibe coding made apps easy. But icons and screenshots? Still a time sink. Drip fixes that.
           </p>
         </FadeIn>
 

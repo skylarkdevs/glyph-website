@@ -20,16 +20,20 @@ export default function Footer() {
         <div className="mt-12 pt-8 border-t border-black/[0.06]">
           <div className="flex items-center justify-center gap-2 mb-4">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo.png" alt="Glyph" width={28} height={28} className="rounded-lg" />
-            <span className="font-extrabold text-lg">Glyph.</span>
+            <img src="/logo.png" alt="Drip" width={28} height={28} className="rounded-lg" />
+            <span className="font-extrabold text-lg">Drip.</span>
           </div>
-          <div className="flex items-center justify-center gap-6 text-sm text-[var(--color-ink-tertiary)]">
-            <a href="https://checker-rodent-eb5.notion.site/Glyph-Privacy-Policy-31f0195b197a81d6badafc2fd30742f0" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--color-ink-secondary)] transition-colors">Privacy Policy</a>
-            <a href="https://checker-rodent-eb5.notion.site/Glyph-Support-31f0195b197a8102bac8c030feb866d8" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--color-ink-secondary)] transition-colors">Support</a>
+          <nav aria-label="Footer navigation" className="flex flex-wrap items-center justify-center gap-6 text-sm text-[var(--color-ink-tertiary)]">
+            <a href="#faq" className="hover:text-[var(--color-ink-secondary)] transition-colors">FAQ</a>
+            <a href="https://apps.apple.com/us/app/glyph/id6760372860" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--color-ink-secondary)] transition-colors">App Store</a>
+            <a href="/privacy" className="hover:text-[var(--color-ink-secondary)] transition-colors">Privacy Policy</a>
+            <a href="/terms" className="hover:text-[var(--color-ink-secondary)] transition-colors">Terms of Use</a>
+            <a href="/support" className="hover:text-[var(--color-ink-secondary)] transition-colors">Support</a>
+            <a href="https://steven.vision" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--color-ink-secondary)] transition-colors">By Steven Kleinveld</a>
             <a href="https://x.com/stevenobba" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--color-ink-secondary)] transition-colors">@stevenobba</a>
-          </div>
+          </nav>
           <p className="text-xs text-[var(--color-ink-tertiary)] mt-4 opacity-60">
-            &copy; {new Date().getFullYear()} Glyph. All rights reserved.
+            &copy; {new Date().getFullYear()} Drip. All rights reserved.
           </p>
         </div>
       </div>
