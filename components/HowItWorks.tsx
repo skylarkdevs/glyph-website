@@ -8,19 +8,19 @@ const steps = [
     step: "01",
     title: "Search or describe",
     description: "Already on the App Store? Search it \u2014 Drip auto-fills everything. New app? A name and one sentence is enough.",
-    screen: "/step1-screen.png",
+    screen: "/step1-screen.jpg",
   },
   {
     step: "02",
     title: "Drop your screenshots in",
     description: "Drip picks the art style, generates backgrounds, writes headlines, and builds everything. No design tools needed.",
-    screen: "/generate-screen.png",
+    screen: "/generate-screen.jpg",
   },
   {
     step: "03",
     title: "Export. Upload. Done.",
     description: "Localized to every major language, sized for every device. Ready for App Store Connect in minutes.",
-    screen: "/step3-screen.png",
+    screen: "/step3-screen.jpg",
   },
 ];
 
