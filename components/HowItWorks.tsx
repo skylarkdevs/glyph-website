@@ -7,13 +7,13 @@ const steps = [
   {
     step: "01",
     title: "Search or describe",
-    description: "If your app is live, just search the App Store \u2014 Drip pulls your listing, icon, and metadata automatically. Starting fresh? A name and one sentence is enough.",
+    description: "Already on the App Store? Search it \u2014 Drip auto-fills everything. New app? A name and one sentence is enough.",
     screen: "/step1-screen.png",
   },
   {
     step: "02",
     title: "Drop your screenshots in",
-    description: "That\u2019s it. Drip picks the art style, generates the backgrounds, writes the headlines, and builds everything. You don\u2019t touch a design tool.",
+    description: "Drip picks the art style, generates backgrounds, writes headlines, and builds everything. No design tools needed.",
     screen: "/generate-screen.png",
   },
   {

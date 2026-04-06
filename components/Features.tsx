@@ -29,7 +29,7 @@ export default function Features() {
             The bottleneck isn&apos;t building anymore.
           </h2>
           <p className="text-center text-[var(--color-ink-secondary)] text-lg mb-16 max-w-2xl mx-auto">
-            You can ship an app in a weekend. But the App Store listing? Icons, screenshots, headlines, localization — that still takes days. Drip does it in minutes.
+            Building is the easy part. The listing — icons, screenshots, headlines, localization — still takes days. Drip does it in minutes.
           </p>
         </FadeIn>
 
