@@ -40,8 +40,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    site: "@stevenobba",
-    creator: "@stevenobba",
+    site: "@Sobban",
+    creator: "@Sobban",
     title: "Drip — AI App Icon Generator & App Store Screenshots",
     description:
       "Generate professional app icons and App Store screenshots with AI. Free to start.",
@@ -73,7 +73,7 @@ const jsonLd = {
         "@type": "Person",
         name: "Steven Kleinveld",
         url: "https://steven.vision",
-        sameAs: ["https://x.com/stevenobba", "https://linkedin.com/in/stevenkleinveld"],
+        sameAs: ["https://x.com/Sobban", "https://linkedin.com/in/stevenkleinveld"],
       },
       aggregateRating: {
         "@type": "AggregateRating",

@@ -30,7 +30,7 @@ export default function Footer() {
             <a href="/terms" className="hover:text-[var(--color-ink-secondary)] transition-colors">Terms of Use</a>
             <a href="/support" className="hover:text-[var(--color-ink-secondary)] transition-colors">Support</a>
             <a href="https://steven.vision" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--color-ink-secondary)] transition-colors">By Steven Kleinveld</a>
-            <a href="https://x.com/stevenobba" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--color-ink-secondary)] transition-colors">@stevenobba</a>
+            <a href="https://x.com/Sobban" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--color-ink-secondary)] transition-colors">@Sobban</a>
           </nav>
           <p className="text-xs text-[var(--color-ink-tertiary)] mt-4 opacity-60">
             &copy; {new Date().getFullYear()} Drip. All rights reserved.
