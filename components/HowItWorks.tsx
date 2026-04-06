@@ -6,20 +6,20 @@ import PhoneMockup from "./PhoneMockup";
 const steps = [
   {
     step: "01",
-    title: "Describe your app",
-    description: "Type your app name, pick a style. That's it. No mood boards, no design briefs, no back-and-forth.",
+    title: "Search or describe",
+    description: "If your app is live, just search the App Store \u2014 Drip pulls your listing, icon, and metadata automatically. Starting fresh? A name and one sentence is enough.",
     screen: "/step1-screen.png",
   },
   {
     step: "02",
-    title: "Watch the magic",
-    description: "Our AI generates multiple icon variations while you watch the most satisfying loading screen ever made.",
+    title: "Drop your screenshots in",
+    description: "That\u2019s it. Drip picks the art style, generates the backgrounds, writes the headlines, and builds everything. You don\u2019t touch a design tool.",
     screen: "/generate-screen.png",
   },
   {
     step: "03",
-    title: "Pick, screenshot, ship",
-    description: "Lock your favorites, generate App Store screenshots, upload to ASC. Done before your coffee gets cold.",
+    title: "Export. Upload. Done.",
+    description: "Localized to every major language, sized for every device. Ready for App Store Connect in minutes.",
     screen: "/step3-screen.png",
   },
 ];

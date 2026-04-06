@@ -6,27 +6,27 @@ import FadeIn from "./FadeIn";
 const faqs = [
   {
     q: "What is Drip?",
-    a: "Drip is an AI-powered iOS app that generates professional app icons and App Store screenshots. Describe your app, pick a style, and get production-ready assets in seconds — no design skills, no Figma, no back-and-forth with designers.",
+    a: "Drip turns your app into a professional App Store listing in minutes. AI-generated icons, screenshots with 6 art styles for backgrounds, ASO-optimized headlines, and localization \u2014 all from one description and your screenshots. Built for developers who ship.",
   },
   {
-    q: "How does AI icon generation work?",
-    a: "Type your app name and choose a visual style. Drip's AI generates multiple icon variations instantly — each one App Store-ready at 1024×1024. Lock your favorites, refine if needed, and export directly.",
+    q: "How does it work?",
+    a: "If your app is on the App Store, just search it \u2014 Drip auto-fills everything. If it\u2019s new, describe it in a sentence. Upload your screenshots, and Drip generates icons, builds screenshot sets with AI backgrounds, writes conversion-optimized headlines, and localizes to every major language. You just export and upload.",
   },
   {
-    q: "Can I create App Store screenshots with Drip?",
-    a: "Yes. Drip generates complete App Store screenshot sets with real device frames, smart layouts, and auto-matched color schemes. You can upload them directly to App Store Connect from within the app.",
+    q: "What do I actually have to do myself?",
+    a: "Upload your screenshots and describe your app. That\u2019s it. Drip handles the backgrounds, headlines, device frames, localization, and export sizes. Everything follows ASO best practices automatically.",
   },
   {
     q: "How much does Drip cost?",
-    a: "Free to start — no credit card needed. Pro is $9.99/month for 50 icon credits and unlimited screenshots. Or buy credit packs starting at $4.99 for 25 credits that never expire.",
+    a: "Free to start \u2014 no credit card needed. Pro is $9.99/month for 50 credits. Or buy credit packs starting at $4.99 that never expire. 1 credit = 1 icon or 1 AI-enhanced screenshot.",
   },
   {
     q: "Who is Drip built for?",
-    a: "Indie developers, vibe coders, and anyone shipping apps to the App Store. If you can build the app but dread the design work around it — icons, screenshots, marketing assets — Drip handles all of it.",
+    a: "Indie developers, solo founders, and vibe coders shipping to the App Store. If you can build the app but dread the listing \u2014 icons, screenshots, headlines, localization \u2014 Drip does all of it.",
   },
   {
-    q: "What makes Drip different from other AI icon generators?",
-    a: "Most AI icon tools are web-based and stop at icon generation. Drip is a native iOS app that combines icon generation, App Store screenshot creation, and direct App Store Connect upload in a single flow. Built specifically for the App Store workflow.",
+    q: "What makes Drip different?",
+    a: "Most tools stop at icon generation. Drip builds your entire App Store listing \u2014 icons, screenshots with AI backgrounds in 6 art styles, headlines optimized to convert, and localization to every major language. All in one native iOS app.",
   },
 ];
 

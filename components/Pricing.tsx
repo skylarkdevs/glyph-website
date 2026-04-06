@@ -14,10 +14,10 @@ export default function Pricing() {
       <div className="max-w-4xl mx-auto">
         <FadeIn>
           <h2 className="text-3xl md:text-4xl font-extrabold text-center mb-4">
-            Cheaper than one hour of design work.
+            A complete App Store listing for less than a coffee.
           </h2>
           <p className="text-center text-[var(--color-ink-secondary)] text-lg mb-6 max-w-xl mx-auto">
-            No subscriptions. Buy credits, use them whenever. They never expire.
+            Credits never expire. Use them when you&apos;re ready to ship.
           </p>
         </FadeIn>
 
@@ -40,19 +40,19 @@ export default function Pricing() {
               <div className="space-y-2.5 text-sm">
                 <div className="flex items-center gap-2">
                   <span className="text-[var(--color-success)]">✓</span>
-                  <span>50 icon credits per month</span>
+                  <span>50 credits/month — icons and AI screenshots</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="text-[var(--color-success)]">✓</span>
-                  <span>Unlimited screenshots</span>
+                  <span>6 AI art styles for screenshot backgrounds</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="text-[var(--color-success)]">✓</span>
-                  <span>App Store Connect upload</span>
+                  <span>Localization to every major language</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="text-[var(--color-success)]">✓</span>
-                  <span>All vibes & layouts</span>
+                  <span>iPhone + iPad export sizes</span>
                 </div>
               </div>
             </div>
@@ -103,13 +103,13 @@ export default function Pricing() {
           <div className="grid md:grid-cols-2 gap-4 max-w-2xl mx-auto">
             <div className="bg-[var(--color-surface)] rounded-2xl p-5 text-center">
               <div className="text-2xl mb-2">🎨</div>
-              <div className="font-bold text-sm mb-1">Icon Generation</div>
-              <div className="text-xs text-[var(--color-ink-tertiary)]">1 credit = 1 generation with multiple variations</div>
+              <div className="font-bold text-sm mb-1">Icons & Screenshots</div>
+              <div className="text-xs text-[var(--color-ink-tertiary)]">1 credit = 1 icon or 1 AI-enhanced screenshot. Everything else included.</div>
             </div>
             <div className="bg-[var(--color-surface)] rounded-2xl p-5 text-center">
-              <div className="text-2xl mb-2">📱</div>
-              <div className="font-bold text-sm mb-1">Screenshots & ASC Upload</div>
-              <div className="text-xs text-[var(--color-ink-tertiary)]">Included with Pro — unlimited screenshots and uploads</div>
+              <div className="text-2xl mb-2">♾️</div>
+              <div className="font-bold text-sm mb-1">Credits Never Expire</div>
+              <div className="text-xs text-[var(--color-ink-tertiary)]">Unused credits roll over. Use them whenever you&apos;re ready to ship.</div>
             </div>
           </div>
         </FadeIn>

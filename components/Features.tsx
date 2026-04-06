@@ -5,18 +5,18 @@ import FadeIn from "./FadeIn";
 const features = [
   {
     icon: "✨",
-    title: "AI Icons in Seconds",
-    description: "Describe your app. Get multiple stunning icon variations instantly. No Figma, no designer, no prompt engineering.",
+    title: "AI Icons. Instantly.",
+    description: "One description. Multiple styles. All export-ready at 1024\u00d71024. The icon is the easy part now.",
   },
   {
     icon: "📱",
-    title: "Screenshots That Ship",
-    description: "Smart layouts, auto-matched vibes, real device frames. App Store-ready screenshots without touching a design tool.",
+    title: "Screenshots That Actually Convert",
+    description: "Upload your screenshots \u2014 Drip handles the rest. AI-generated backgrounds, ASO-optimized headlines, real device frames. No templates.",
   },
   {
-    icon: "🚀",
-    title: "Straight to App Store",
-    description: "Upload directly to App Store Connect from the app. Generate, preview, ship — all in one flow.",
+    icon: "🌍",
+    title: "Every Language. Every Device.",
+    description: "Localized headlines for every major market. iPhone and iPad sizes exported in one tap. Ship globally from day one.",
   },
 ];
 
@@ -29,7 +29,7 @@ export default function Features() {
             The bottleneck isn&apos;t building anymore.
           </h2>
           <p className="text-center text-[var(--color-ink-secondary)] text-lg mb-16 max-w-2xl mx-auto">
-            Vibe coding made apps easy. But icons and screenshots? Still a time sink. Drip fixes that.
+            You can ship an app in a weekend. But the App Store listing? Icons, screenshots, headlines, localization — that still takes days. Drip does it in minutes.
           </p>
         </FadeIn>
 

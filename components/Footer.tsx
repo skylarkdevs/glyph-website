@@ -9,10 +9,10 @@ export default function Footer() {
       <div className="max-w-4xl mx-auto text-center">
         <FadeIn>
           <h2 className="text-3xl md:text-5xl font-black mb-4">
-            Stop designing.<br />Start shipping.
+            Your listing, done.
           </h2>
           <p className="text-lg text-[var(--color-ink-secondary)] mb-8 max-w-md mx-auto">
-            Built by a vibe coder, for vibe coders.
+            Icons, screenshots, headlines, localization — all AI-generated, all optimized to convert.
           </p>
           <AppStoreBadge />
         </FadeIn>
